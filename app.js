@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const deviceService = require('./services/deviceService')
+const connectionService = require('./services/connectionService')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -39,8 +40,15 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-setTimeout(async ()=> {
-  new deviceService()
+app.locals.cS = new connectionService()
+
+setInterval(async ()=> {
+  if (app.locals.cS.isOnline()) {
+    if (!app.locals.dS) app.locals.dS = new deviceService()
+  } else {
+    console.log('Device has no internet connection!!!')
+  }
+
 }, 30 * 1000)
 
 module.exports = app;
