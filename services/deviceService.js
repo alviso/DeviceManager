@@ -95,7 +95,7 @@ class deviceService {
         try {
             if (fs.existsSync(newFname4)) {
                 const jwt = fs.readFileSync(newFname4, 'utf8')
-                this.replaceInTomlFile(oldFname3, gatewayId, jwt)
+                this.replaceInTomlFile(oldFname3, gatewayId.toLowerCase(), jwt)
             }
         } catch(e) {
             console.error(e)
