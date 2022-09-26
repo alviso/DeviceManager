@@ -39,6 +39,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-new deviceService()
+setInterval(async ()=> {
+  new deviceService()
+}, 30 * 1000)
 
 module.exports = app;
