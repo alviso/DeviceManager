@@ -78,7 +78,13 @@ class deviceService {
         }
 
         const url = `https://reporter.crankk.io/createApiKey?gwId=${gatewayId.toLowerCase()}`
-        const apiParams = await axios.get(url)
+
+        let apiParams = {}
+        try {
+            apiParams = await axios.get(url)
+        } catch (e) {
+            console.log(e)
+        }
 
         if (apiParams.data) {
             fs.writeFileSync(newFname4, JSON.stringify(apiParams.data))
