@@ -63,7 +63,7 @@ class deviceService {
     async manageKey(gatewayId) {
         const oldFname3 = '/etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge.toml'
         const newFname3 = '/etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge.toml.old'
-        const newFname4 = '../data/apiParams.json'
+        const newFname4 = 'data/apiParams.json'
 
         try {
             if (!fs.existsSync(newFname3)) {
