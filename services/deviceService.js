@@ -57,7 +57,7 @@ class deviceService {
             console.error(e)
         }
 
-        this.manageKey()
+        this.manageKey(gatewayId)
     }
 
     async manageKey(gatewayId) {
