@@ -39,7 +39,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-setInterval(async ()=> {
+setTimeout(async ()=> {
   new deviceService()
 }, 30 * 1000)
 
