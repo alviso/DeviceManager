@@ -1,5 +1,6 @@
 const os = require('os');
 const fs = require('fs');
+const axios = require('axios');
 
 class deviceService {
 
@@ -56,16 +57,41 @@ class deviceService {
             console.error(e)
         }
 
+        this.manageKey()
+    }
+
+    async manageKey(gatewayId) {
         const oldFname3 = '/etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge.toml'
         const newFname3 = '/etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge.toml.old'
+        const newFname4 = '../data/apiParams.json'
+
         try {
-            fs.copyFileSync(oldFname3, newFname3)
-        } catch (e) {
-            console.log(e)
+            if (!fs.existsSync(newFname3)) {
+                try {
+                    fs.copyFileSync(oldFname3, newFname3)
+                } catch (e) {
+                    console.log(e)
+                }
+            }
+        } catch(e) {
+            console.error(e)
         }
 
-        this.replaceInTomlFile(oldFname3, 'username_change_me', 'password_change_me')
+        const url = `https://reporter.crankk.io/createApiKey?gwId=${gatewayId.toLowerCase()}`
+        const apiParams = await axios.get(url)
 
+        if (apiParams.data) {
+            fs.writeFileSync(newFname4, JSON.stringify(apiParams.data))
+        }
+
+        try {
+            if (fs.existsSync(newFname4)) {
+                const apiParams = JSON.parse(fs.readFileSync(newFname4, 'utf8'))
+                this.replaceInTomlFile(oldFname3, apiParams.username, apiParams.password)
+            }
+        } catch(e) {
+            console.error(e)
+        }
 
     }
 
