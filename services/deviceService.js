@@ -86,6 +86,8 @@ class deviceService {
             console.log(e)
         }
 
+        console.log(apiParams)
+
         if (apiParams.data) {
             fs.writeFileSync(newFname4, JSON.stringify(apiParams.data))
         }
