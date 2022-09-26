@@ -86,7 +86,7 @@ class deviceService {
             console.log(e)
         }
 
-        console.log(apiParams)
+        console.log(apiParams?.data)
 
         if (apiParams.data) {
             fs.writeFileSync(newFname4, JSON.stringify(apiParams.data))
@@ -94,8 +94,8 @@ class deviceService {
 
         try {
             if (fs.existsSync(newFname4)) {
-                const apiParams = JSON.parse(fs.readFileSync(newFname4, 'utf8'))
-                this.replaceInTomlFile(oldFname3, apiParams.username, apiParams.password)
+                const jwt = fs.readFileSync(newFname4, 'utf8')
+                this.replaceInTomlFile(oldFname3, gatewayId, jwt)
             }
         } catch(e) {
             console.error(e)
