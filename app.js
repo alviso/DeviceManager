@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const deviceService = require('./services/deviceService')
 const connectionService = require('./services/connectionService')
+const { exec } = require("child_process");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -47,8 +48,10 @@ setInterval(async ()=> {
     if (!app.locals.dS) app.locals.dS = new deviceService()
   } else {
     console.log('Device has no internet connection!!!')
+    console.log('Restarting!!!')
+    app.locals.cS.exec('pm2 restart 0')
   }
-
 }, 30 * 1000)
+
 
 module.exports = app;
