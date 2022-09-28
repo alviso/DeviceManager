@@ -54,7 +54,7 @@ class connectionService {
                 if (text.includes('chirpstack'))
                 {
                     if ((text.includes('not Connected') || text.includes('failed to connect to broker'))
-                        && (now - this.lastRestart > 10000)) {
+                        && (now - this.lastRestart > 60 * 1000)) {
                         console.log("Restarting gateway bridge...");
                         this.lastRestart = now;
                         this.exec('sudo service lora-gateway-bridge restart');
