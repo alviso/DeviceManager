@@ -1,6 +1,7 @@
 const os = require('os');
 const fs = require('fs');
 const axios = require('axios');
+const {exec} = require("child_process");
 
 class deviceService {
 
@@ -104,31 +105,51 @@ class deviceService {
     }
 
     replaceInGlobalFile(fname, gatewayId) {
-        fs.readFile(fname, 'utf8', function (err,data) {
+        fs.readFile(fname, 'utf8', (err,data) => {
             if (err) return console.log(err)
 
             let result = data.replace('"serv_port_up": 1730,', '"serv_port_up": 1700,')
             result = result.replace('"serv_port_down": 1730,', '"serv_port_down": 1700,')
             result = result.replace('AA555A0000000000', gatewayId)
 
-            fs.writeFile(fname, result, 'utf8', function (err) {
+            fs.writeFile(fname, result, 'utf8', (err) => {
                 if (err) return console.log(err);
+                this.exec('sudo service lora_pkt_fwd restart');
             });
         });
     }
 
     replaceInTomlFile(fname, username, password) {
-        fs.readFile(fname, 'utf8', function (err,data) {
+        fs.readFile(fname, 'utf8', (err,data) => {
             if (err) return console.log(err)
 
             let result = data.replace('username_change_me', username)
             result = result.replace('password_change_me', password)
 
-            fs.writeFile(fname, result, 'utf8', function (err) {
+            fs.writeFile(fname, result, 'utf8', (err) => {
                 if (err) return console.log(err);
+                this.exec('sudo service lora-gateway-bridge restart');
             });
         });
     }
+
+    async exec(command) {
+        return new Promise((resolve, reject)=>{
+            exec(command, (error, stdout, stderr) => {
+                if (error) {
+                    console.log(`error: ${error.message}`);
+                    return resolve('');
+                }
+                if (stderr) {
+                    console.log(`stderr: ${stderr}`);
+                    return resolve('');
+                }
+                console.log(`stdout: ${stdout}`);
+                return resolve(stdout);
+            });
+        })
+    }
+
 }
 
 
