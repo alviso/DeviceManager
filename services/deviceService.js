@@ -38,7 +38,7 @@ class deviceService {
                 console.log(e)
             }
 
-            const oldFname1 = homedir + '/sx1302_hal/packet_forwarder/global_conf.json.sx1250.EU868'
+            const oldFname1 = homedir + '/sx1302_hal/packet_forwarder/global_conf.json.sx1250.US915'
             const newFname1 = homedir + '/sx1302_hal/packet_forwarder/global_conf.json'
             try {
                 fs.copyFileSync(oldFname1, newFname1)
