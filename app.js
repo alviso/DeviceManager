@@ -49,7 +49,7 @@ setInterval(async ()=> {
   } else {
     console.log('Device has no internet connection!!!')
     console.log('Restarting!!!')
-    app.locals.cS.exec('pm2 restart 0')
+    app.locals.cS.exec('pm2 restart all')
   }
 }, 30 * 1000)
 
