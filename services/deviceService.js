@@ -22,30 +22,30 @@ class deviceService {
         const homedir = os.homedir()
         const oldFname = homedir + '/sx1302_hal/packet_forwarder/global_conf.json'
         const newFname = homedir + '/sx1302_hal/packet_forwarder/global_conf.json.old'
-        let exists = false
+        // let exists = false
+        // try {
+        //     if (fs.existsSync(newFname)) {
+        //         exists = true
+        //     }
+        // } catch(e) {
+        //     console.error(e)
+        // }
+
+        // if (!exists) {
         try {
-            if (fs.existsSync(newFname)) {
-                exists = true
-            }
-        } catch(e) {
-            console.error(e)
+            fs.renameSync(oldFname, newFname)
+        } catch (e) {
+            console.log(e)
         }
 
-        if (!exists) {
-            try {
-                fs.renameSync(oldFname, newFname)
-            } catch (e) {
-                console.log(e)
-            }
-
-            const oldFname1 = homedir + '/sx1302_hal/packet_forwarder/global_conf.json.sx1250.US915'
-            const newFname1 = homedir + '/sx1302_hal/packet_forwarder/global_conf.json'
-            try {
-                fs.copyFileSync(oldFname1, newFname1)
-            } catch (e) {
-                console.log(e)
-            }
+        const oldFname1 = homedir + '/sx1302_hal/packet_forwarder/global_conf.json.sx1250.EU868'
+        const newFname1 = homedir + '/sx1302_hal/packet_forwarder/global_conf.json'
+        try {
+            fs.copyFileSync(oldFname1, newFname1)
+        } catch (e) {
+            console.log(e)
         }
+        // }
 
         this.replaceInGlobalFile(oldFname, gatewayId)
 
@@ -66,17 +66,17 @@ class deviceService {
         const newFname3 = '/etc/chirpstack-gateway-bridge/chirpstack-gateway-bridge.toml.old'
         const newFname4 = 'data/apiParams.json'
 
+        // try {
+        //     if (!fs.existsSync(newFname3)) {
         try {
-            if (!fs.existsSync(newFname3)) {
-                try {
-                    fs.copyFileSync(oldFname3, newFname3)
-                } catch (e) {
-                    console.log(e)
-                }
-            }
-        } catch(e) {
-            console.error(e)
+            fs.copyFileSync(oldFname3, newFname3)
+        } catch (e) {
+            console.log(e)
         }
+        //     }
+        // } catch(e) {
+        //     console.error(e)
+        // }
 
         const url = `https://reporter.crankk.io/createApiKey?gwId=${gatewayId.toLowerCase()}`
 
@@ -87,10 +87,11 @@ class deviceService {
             console.log(e)
         }
 
-        console.log(apiParams?.data)
+        const apiData = apiParams?.data
+        console.log(apiData)
 
-        if (apiParams.data) {
-            fs.writeFileSync(newFname4, apiParams.data)
+        if (apiData && apiData?.length > 20) {
+            fs.writeFileSync(newFname4, apiData)
         }
 
         try {
@@ -123,8 +124,10 @@ class deviceService {
         fs.readFile(fname, 'utf8', (err,data) => {
             if (err) return console.log(err)
 
-            let result = data.replace('username_change_me', username)
-            result = result.replace('password_change_me', password)
+            // let result = data.replace('username_change_me', username)
+            // result = result.replace('password_change_me', password)
+            let result = data.replace(/username=".*/gm, `username="${username}"`)
+            result = result.replace(/password=".*/gm, `password="${password}"`)
 
             fs.writeFile(fname, result, 'utf8', (err) => {
                 if (err) return console.log(err);
